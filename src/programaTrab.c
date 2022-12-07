@@ -13,19 +13,19 @@ int main() {
 
     switch (funcionalidade) {
         case 11: // 
-            funcionalidade1();
+            funcionalidade11();
             break;
         case 12: // 
-            funcionalidade2();
+            funcionalidade12();
             break;
         case 13: // 
-            funcionalidade3();
+            funcionalidade13();
             break;
         case 14: // 
-            funcionalidade4();
+            funcionalidade14();
             break;
         default:
             msg_funcionalidade_inexistente();
             break;
-    }
+    }    
 }

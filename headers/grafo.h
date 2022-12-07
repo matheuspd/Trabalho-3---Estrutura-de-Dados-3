@@ -3,21 +3,22 @@
 
 #include "registros.h"
 
+#define NUM_VERTICES_INICIAL 100
+#define NUM_LIGACOES_INICIAL 10
+
 typedef struct aresta {
     int idPoPsConectado;
-    float velocidade;
-    Aresta *prox;
-    size_t size;
-    size_t numLigacoes;
+    int velocidade;
 } Aresta;
 
 typedef struct vertice {
     int id;
-    int numVerticesLigados;
     char nomePoPs[TAM_MAX_NOME];
     char nomePais[TAM_MAX_NOME];
     char siglaPais[3];
-    Aresta *primeiro;
+    Aresta *ligacoes;
+    size_t sizeLigacoes;
+    int numLigacoes;
 } Vertice;
 
 typedef struct grafo {
@@ -29,9 +30,10 @@ typedef struct grafo {
 
 Grafo *criaGrafo();
 void liberaGrafo(Grafo *gr);
-int insereGrafo(Grafo *gr, REGISTRO reg);
-int insereElementoOrdenado(Grafo *gr, Vertice *vertice, int pos, REGISTRO reg);
+int insereGrafo(Grafo *gr, REGISTRO *reg);
+int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg);
 int existeVertice(Grafo *gr, int id);
-int existeAresta(Grafo *gr, int id1, int id2);
+void ordenarGrafo(Grafo *gr);
+void imprimeGrafo(Grafo *gr);
 
 #endif

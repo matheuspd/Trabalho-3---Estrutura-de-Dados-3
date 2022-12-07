@@ -4,8 +4,6 @@
 */
 
 #include "registros.h"
-#include "cabecalho.h"
-#include "funcoesFornecidas.h"
 
 void ler_registro_input(REGISTRO *reg) {
 	reg->removido = '0';

@@ -4,10 +4,6 @@
 */
 
 #include "funcionalidades.h"
-#include "funcoesFornecidas.h"
-#include "cabecalho.h"
-#include "registros.h"
-#include "mensagens.h"
 
 #define TAM_PAGINA_DISCO 960
 
@@ -29,22 +25,66 @@ char *remove_aspas(char *nomeCampo)
 	return nomeCampo;
 }
 
-void funcionalidade11()
-{ // 
+void funcionalidade11() { // Cria grafo e imprime os registros
+	char arqBin[TAM_MAX_NOME];
+	scanf("%s", arqBin);
+
+	FILE *bin = fopen(arqBin, "rb");
+
+	if (bin == NULL)
+	{
+		msg_falha_processamento();
+		exit(0);
+	}
+
+	CABECALHO *cab = malloc(sizeof(CABECALHO));
+	REGISTRO *reg = malloc(sizeof(REGISTRO));
+	Grafo *gr = criaGrafo();
+
+	int existe_cabecalho = ler_cabecalho_bin(cab, bin);
+
+	if (existe_cabecalho)
+	{
+		if (cab->proxRRN != 0)
+		{
+			for (int i = 0; i < cab->proxRRN; i++)
+			{
+				int existe_registro = ler_registro_bin(reg, bin);
+
+				if (existe_registro)
+				{
+					if (reg->removido == '0')
+					{
+						insereGrafo(gr, reg);	// Imprime os registros nao removidos do arquivo binario
+					}
+				}
+			}
+		}
+		else
+		{
+			msg_registro_inexistente();
+		}
+	}
+	else
+	{
+		msg_falha_processamento();
+	}
+
+	liberaGrafo(gr);
+	free(reg);
+	free(cab);
+	fclose(bin);
 	
 }
 
-void funcionalidade2()
-{ // 
+void funcionalidade12() { // 
 	
 }
 
-void funcionalidade3()
-{ // 
+void funcionalidade13() { // 
 	
 }
 
-void funcionalidade4()
-{ //
+void funcionalidade14() { //
 	
 }

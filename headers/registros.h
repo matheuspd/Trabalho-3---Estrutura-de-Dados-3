@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "cabecalho.h"
+#include "funcoesFornecidas.h"
 
 #define TAM_MAX_NOME 25
 #define LIXO "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
