@@ -3,8 +3,8 @@
 
 #include "registros.h"
 
-#define NUM_VERTICES_INICIAL 100
-#define NUM_LIGACOES_INICIAL 10
+#define NUM_VERTICES_INICIAL 1000
+#define NUM_LIGACOES_INICIAL 100
 
 typedef struct aresta {
     int idPoPsConectado;

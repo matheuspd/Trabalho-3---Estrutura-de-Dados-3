@@ -12,7 +12,7 @@ int main() {
     scanf("%d", &funcionalidade);
 
     switch (funcionalidade) {
-        case 11: // 
+        case 11: // Cria e imprime o grafo
             funcionalidade11();
             break;
         case 12: // 
