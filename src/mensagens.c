@@ -9,5 +9,5 @@ void msg_registro_inexistente() {
 }
 
 void msg_falha_processamento() {
-    printf("Falha no processamento do arquivo.");
+    printf("Falha na execução da funcionalidade.");
 }

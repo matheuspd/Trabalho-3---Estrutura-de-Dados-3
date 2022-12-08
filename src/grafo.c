@@ -1,4 +1,5 @@
 #include "grafo.h"
+#include "heapsort.h"
 
 Grafo *criaGrafo() {    // Cria grafo vazio
     Grafo *gr = (Grafo*)malloc(sizeof(Grafo));
@@ -49,7 +50,13 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { /*IMPL
                 return 0;
             }        
             v[fimVetor].ligacoes[0].idPoPsConectado = reg->idPoPsConectado;
-            v[fimVetor].ligacoes[0].velocidade = reg->velocidade;
+
+            if(reg->unidadeMedida == 'G') {
+                v[fimVetor].ligacoes[0].velocidade = 1024 * reg->velocidade;
+            } else {
+                v[fimVetor].ligacoes[0].velocidade = reg->velocidade;
+            }
+            
             // Nao aumenta o numero de ligacoes, o proximo sera inserido por cima do valor -1
 
             fimVetor++;
@@ -83,7 +90,12 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { /*IMPL
                 return 0;
             }        
             v[fimVetor].ligacoes[0].idPoPsConectado = reg->idPoPsConectado;
-            v[fimVetor].ligacoes[0].velocidade = reg->velocidade;
+
+            if(reg->unidadeMedida == 'G') {
+                v[fimVetor].ligacoes[0].velocidade = 1024 * reg->velocidade;
+            } else {
+                v[fimVetor].ligacoes[0].velocidade = reg->velocidade;
+            }
 
             v[fimVetor].numLigacoes++;
 
@@ -99,7 +111,12 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { /*IMPL
                 strcpy(v[pos].siglaPais, reg->siglaPais);
             }
             v[pos].ligacoes[v[pos].numLigacoes].idPoPsConectado = reg->idPoPsConectado;
-            v[pos].ligacoes[v[pos].numLigacoes].velocidade = reg->velocidade;
+
+            if(reg->unidadeMedida == 'G') {
+                v[pos].ligacoes[v[pos].numLigacoes].velocidade = 1024 * reg->velocidade;
+            } else {
+                v[pos].ligacoes[v[pos].numLigacoes].velocidade = reg->velocidade;
+            }
 
             v[pos].numLigacoes++;
             // REALOC
@@ -121,7 +138,12 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { /*IMPL
                 return 0;
             }
             v[fimVetor].ligacoes[0].idPoPsConectado = reg->idConecta;
-            v[fimVetor].ligacoes[0].velocidade = reg->velocidade;
+
+            if(reg->unidadeMedida == 'G') {
+                v[fimVetor].ligacoes[0].velocidade = 1024 * reg->velocidade;
+            } else {
+                v[fimVetor].ligacoes[0].velocidade = reg->velocidade;
+            }
 
             v[fimVetor].numLigacoes++;
 
@@ -132,7 +154,12 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { /*IMPL
             }
         } else {
             v[pos].ligacoes[v[pos].numLigacoes].idPoPsConectado = reg->idConecta;
-            v[pos].ligacoes[v[pos].numLigacoes].velocidade = reg->velocidade;
+
+            if(reg->unidadeMedida == 'G') {
+                v[pos].ligacoes[v[pos].numLigacoes].velocidade = 1024 * reg->velocidade;
+            } else {
+                v[pos].ligacoes[v[pos].numLigacoes].velocidade = reg->velocidade;
+            }
 
             v[pos].numLigacoes++;
             // REALOC
@@ -155,15 +182,17 @@ int existeVertice(Grafo *gr, int id) {
 }
 
 void ordenarGrafo(Grafo *gr) {
-    
+    heap_sort_vertice(gr->vertices, gr->totalVertices);
+    for(int i = 0; i < gr->totalVertices; i++) {
+        heap_sort_arestas(gr->vertices[i].ligacoes, gr->vertices[i].numLigacoes);
+    }
 }
 
 void imprimeGrafo(Grafo *gr) {
-    //ordenarGrafo(gr);
     for(int i = 0; i < gr->totalVertices; i++) {
         for(int j = 0; j < gr->vertices[i].numLigacoes; j++) {
             printf("%d %s %s %s ", gr->vertices[i].id, gr->vertices[i].nomePoPs, gr->vertices[i].nomePais, gr->vertices[i].siglaPais);
-            printf("%d %d\n", gr->vertices[i].ligacoes[j].idPoPsConectado, gr->vertices[i].ligacoes[j].velocidade);
+            printf("%d %dMbps\n", gr->vertices[i].ligacoes[j].idPoPsConectado, gr->vertices[i].ligacoes[j].velocidade);
         }
     }
 }

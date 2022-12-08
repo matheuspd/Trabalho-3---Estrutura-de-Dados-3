@@ -70,6 +70,7 @@ void funcionalidade11() { // Cria grafo e imprime os registros
 		msg_falha_processamento();
 	}
 
+	ordenarGrafo(gr);
 	imprimeGrafo(gr);
 	liberaGrafo(gr);
 	free(reg);
