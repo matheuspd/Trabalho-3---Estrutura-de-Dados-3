@@ -61,6 +61,7 @@ int ler_registro_bin(REGISTRO *reg, FILE *bin) {
     fread(&reg->encadeamento, sizeof(int), 1, bin);
     fread(&reg->idConecta, sizeof(int), 1, bin);
     fread(reg->siglaPais, 2*sizeof(char), 1, bin);
+    reg->siglaPais[2] = '\0';
     fread(&reg->idPoPsConectado, sizeof(int), 1, bin);
     fread(&reg->unidadeMedida, sizeof(char), 1, bin);
     fread(&reg->velocidade, sizeof(int), 1, bin);

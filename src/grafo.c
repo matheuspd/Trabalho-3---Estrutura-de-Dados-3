@@ -48,7 +48,10 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { /*IMPL
             v[fimVetor].ligacoes = malloc(sizeof(Aresta)*NUM_LIGACOES_INICIAL);
             if(v[fimVetor].ligacoes == NULL) {
                 return 0;
-            }        
+            }
+
+            v[fimVetor].numLigacoes = 0;
+
             v[fimVetor].ligacoes[0].idPoPsConectado = reg->idPoPsConectado;
 
             if(reg->unidadeMedida == 'G') {
@@ -62,18 +65,14 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { /*IMPL
             fimVetor++;
             // REALOC
             if(fimVetor >= gr->sizeGrafo) {
-
+                gr->sizeGrafo *= 2;
+                v = realloc(v, gr->sizeGrafo);
             }
         } else {
             if(!strcmp(v[pos].nomePais, "")) {
                 strcpy(v[pos].nomePais, reg->nomePais);
                 strcpy(v[pos].nomePoPs, reg->nomePoPs);
                 strcpy(v[pos].siglaPais, reg->siglaPais);
-            }
-            
-            // REALOC
-            if(v[pos].numLigacoes >= v[pos].sizeLigacoes) {
-
             }
         }
     } else {
@@ -88,7 +87,10 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { /*IMPL
             v[fimVetor].ligacoes = malloc(sizeof(Aresta)*NUM_LIGACOES_INICIAL);
             if(v[fimVetor].ligacoes == NULL) {
                 return 0;
-            }        
+            }
+
+            v[fimVetor].numLigacoes = 0;
+
             v[fimVetor].ligacoes[0].idPoPsConectado = reg->idPoPsConectado;
 
             if(reg->unidadeMedida == 'G') {
@@ -102,7 +104,8 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { /*IMPL
             fimVetor++;
             // REALOC
             if(fimVetor >= gr->sizeGrafo) {
-
+                gr->sizeGrafo *= 2;
+                v = realloc(v, gr->sizeGrafo);
             }
         } else {
             if(!strcmp(v[pos].nomePais, "")) {
@@ -121,7 +124,8 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { /*IMPL
             v[pos].numLigacoes++;
             // REALOC
             if(v[pos].numLigacoes >= v[pos].sizeLigacoes) {
-
+                v[pos].sizeLigacoes *= 2;
+                v[pos].ligacoes = realloc(v[pos].ligacoes, v[pos].sizeLigacoes);
             }
         }
 
@@ -137,6 +141,9 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { /*IMPL
             if(v[fimVetor].ligacoes == NULL) {
                 return 0;
             }
+
+            v[fimVetor].numLigacoes = 0;
+
             v[fimVetor].ligacoes[0].idPoPsConectado = reg->idConecta;
 
             if(reg->unidadeMedida == 'G') {
@@ -150,7 +157,8 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { /*IMPL
             fimVetor++;
             // REALOC
             if(fimVetor >= gr->sizeGrafo) {
-
+                gr->sizeGrafo *= 2;
+                v = realloc(v, gr->sizeGrafo);
             }
         } else {
             v[pos].ligacoes[v[pos].numLigacoes].idPoPsConectado = reg->idConecta;
@@ -164,7 +172,8 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { /*IMPL
             v[pos].numLigacoes++;
             // REALOC
             if(v[pos].numLigacoes >= v[pos].sizeLigacoes) {
-
+                v[pos].sizeLigacoes *= 2;
+                v[pos].ligacoes = realloc(v[pos].ligacoes, v[pos].sizeLigacoes);
             }
         }
     }
