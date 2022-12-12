@@ -69,7 +69,7 @@ void funcionalidade11() { // Cria grafo e imprime os vertices
 	}
 
 	ordenarGrafo(gr);
-	imprimeGrafo(gr);
+	imprimeGrafo(gr);	
 	liberaGrafo(gr);
 	free(reg);
 	free(cab);
@@ -135,5 +135,68 @@ void funcionalidade13() { // Verifica a maior taxa de transmissao possivel entre
 }
 
 void funcionalidade14() { // Verifica o comprimento do caminho entre 2 vertices, passando por outro vetice especifico
-	
+	char arqBin[TAM_MAX_NOME];
+	int n;
+	scanf("%s %d", arqBin, &n);
+
+	FILE *bin = fopen(arqBin, "rb");
+
+	if (bin == NULL)
+	{
+		msg_falha_processamento();
+		exit(0);
+	}
+
+	CABECALHO *cab = malloc(sizeof(CABECALHO));
+	REGISTRO *reg = malloc(sizeof(REGISTRO));
+	Grafo *gr = criaGrafo();
+
+	int existe_cabecalho = ler_cabecalho_bin(cab, bin);
+
+	if (existe_cabecalho)
+	{
+		if (cab->proxRRN != 0)
+		{
+			for (int i = 0; i < cab->proxRRN; i++)
+			{
+				int existe_registro = ler_registro_bin(reg, bin);
+
+				if (existe_registro)
+				{
+					if (reg->removido == '0')
+					{
+						insereGrafo(gr, reg);	// Imprime os registros nao removidos do arquivo binario
+					}
+				}
+			}
+		}
+		else
+		{
+			msg_registro_inexistente();
+		}
+	}
+	else
+	{
+		msg_falha_processamento();
+	}
+
+	ordenarGrafo(gr);
+
+	int  PoPsOrigem, PoPsDestino, PoPsParada;
+
+	for(int i = 0; i < n; i++) {
+		scanf("%d %d %d", &PoPsOrigem, &PoPsDestino, &PoPsParada);
+		int dist1 = dijkstra(gr, PoPsOrigem, PoPsParada);
+		int dist2 = dijkstra(gr, PoPsParada, PoPsDestino);
+
+		if(dist1 == INT_MAX || dist2 == INT_MAX) {
+			printf("Comprimento do caminho entre %d e %d parando em %d: -1\n", PoPsOrigem, PoPsDestino, PoPsParada);
+		} else {
+			printf("Comprimento do caminho entre %d e %d parando em %d: %dMbps\n", PoPsOrigem, PoPsDestino, PoPsParada, dist1+dist2);
+		}		
+	}
+	liberaGrafo(gr);
+	free(reg);
+	free(cab);
+	fclose(bin);	
 }

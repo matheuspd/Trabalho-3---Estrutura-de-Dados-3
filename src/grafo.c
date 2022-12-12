@@ -171,17 +171,17 @@ int existeVertice(Grafo *gr, int id) {  // Verifica se existe um vertice com o v
     return -1;
 }
 
-int existeAresta(int id1, int id2, Grafo *gr) {   // Verifica se existe uma aresta entre os 2 vertices
+int velocidadeAresta(int id1, int id2, Grafo *gr) {   // Verifica se existe uma aresta entre os 2 vertices
     int pos1 = existeVertice(gr, id1);
     if(pos1 != -1) {
         Vertice v1 = gr->vertices[pos1];
         for(int i = 0; i < v1.numLigacoes; i++) {
             if(v1.ligacoes[i].idPoPsConectado == id2) {
-                return 1;
+                return v1.ligacoes[i].velocidade;
             }
         }
     }
-    return 0;
+    return -1;
 }
 
 void ordenarGrafo(Grafo *gr) {  // Ordena o grafo pelos valores de idConecta(vertices) e idPoPs(listas de cada vertice)
@@ -201,7 +201,6 @@ void imprimeGrafo(Grafo *gr) {  // Imprime o grafo em ordem
 }
 
 void visitaDFS(int pos, Grafo *gr, int* tempo, int* d, int* t, Cor* cor, short* antecessor, int *numCiclos) {
-    //int velocidade;
     int aux;
     int pos_v;
     cor[pos] = cinza;
@@ -210,7 +209,6 @@ void visitaDFS(int pos, Grafo *gr, int* tempo, int* d, int* t, Cor* cor, short* 
     //printf("Visita id %2d Tempo descoberta:%2d cinza\n", gr->vertices[pos].id, d[pos]);
     if (gr->vertices[pos].numLigacoes > 0) {
         aux = gr->vertices[pos].ligacoes[0].idPoPsConectado;
-        //velocidade = gr->vertices[pos].ligacoes[0].velocidade;
         int pos_lista = 0;
         while (pos_lista < gr->vertices[pos].numLigacoes) { 
             pos_v = existeVertice(gr, aux);         
@@ -224,7 +222,6 @@ void visitaDFS(int pos, Grafo *gr, int* tempo, int* d, int* t, Cor* cor, short* 
 
             pos_lista++;
             aux = gr->vertices[pos].ligacoes[pos_lista].idPoPsConectado;
-            //velocidade = gr->vertices[pos].ligacoes[pos_lista].velocidade;
         }
     }
     cor[pos] = preto;
@@ -248,4 +245,60 @@ void buscaEmProfundidade(Grafo *gr) {
         if (cor[pos] == branco) visitaDFS(pos, gr, &tempo, d, t, cor, antecessor, &numCiclos);
     }
     printf("Quantidade de ciclos: %d\n", numCiclos);
+}
+ 
+
+// Encontra o vertice com a menor distancia dos vertices ainda nao inclusos na arvore d emenor caminho
+int minDistance(Grafo *gr, int dist[], bool VerticesArvMin[]) {
+    // Inicializa menor valor
+    int min = INT_MAX, min_pos;
+ 
+    for (int i = 0; i < gr->totalVertices; i++) {
+        if (VerticesArvMin[i] == false && dist[i] <= min) {
+            min = dist[i];
+            min_pos = i;
+        }
+    }
+ 
+    return min_pos;
+}
+
+int dijkstra(Grafo *gr, int id_origem, int id_destino) {
+    int pos_origem = existeVertice(gr, id_origem);
+    int pos_destino = existeVertice(gr, id_destino);
+    if(pos_origem == -1 || pos_destino == -1) {
+        return -1;
+    }
+    
+    int dist[gr->totalVertices];
+ 
+    bool VerticesArvMin[gr->totalVertices]; // VerticesArvMin[i] true se o vertice i esta no menor caminho da arvore
+ 
+    // Inicializa as distancias como Infinito e o menor caminho pela arvore como falso
+    for (int i = 0; i < gr->totalVertices; i++) {
+        dist[i] = INT_MAX;
+        VerticesArvMin[i] = false;
+    }
+ 
+    // Distancia da pos_origem ate ela mesma e zero
+    dist[pos_origem] = 0;
+ 
+    // Encontra menor caminho para todos os vertices
+    for (int count = 0; count < gr->totalVertices - 1; count++) {
+        // Pega a menor distancia entre os vertices ainda nao processados
+        int u = minDistance(gr, dist, VerticesArvMin);
+ 
+        // Marca o vertice como processado
+        VerticesArvMin[u] = true;
+
+        // Atualiza as distancia dos vertices adjacentes do vertice selecionado
+        for (int v = 0; v < gr->totalVertices; v++) {
+            int vel = velocidadeAresta(gr->vertices[u].id, gr->vertices[v].id, gr);
+            // Atualiza dist[v] somente se nao esta em VerticesArvMin
+            if (!VerticesArvMin[v] && vel != -1 && dist[u] != INT_MAX && dist[u] + vel < dist[v]) {
+                dist[v] = dist[u] + vel;
+            }
+        }
+    }
+    return dist[pos_destino];
 }

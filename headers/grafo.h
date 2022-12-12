@@ -1,6 +1,8 @@
 #ifndef __GRAFO__
 #define __GRAFO__
 
+#include <limits.h>
+
 #include "registros.h"
 
 #define NUM_VERTICES_MAX 1000
@@ -38,10 +40,12 @@ Vertice *realloc_vertices(Grafo *gr);
 int insereGrafo(Grafo *gr, REGISTRO *reg);
 int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg);
 int existeVertice(Grafo *gr, int id);
-int existeAresta(int id1, int id2, Grafo *gr);
+int velocidadeAresta(int id1, int id2, Grafo *gr);
 void buscaEmProfundidade(Grafo *gr);
 void visitaDFS(int pos, Grafo *gr, int* tempo, int* d, int* t, Cor* cor, short* antecessor, int* numciclos);
 void ordenarGrafo(Grafo *gr);
 void imprimeGrafo(Grafo *gr);
+int minDistance(Grafo *gr, int dist[], bool VerticesArvMin[]);
+int dijkstra(Grafo *gr, int pos_origem, int pos_destino);
 
 #endif
