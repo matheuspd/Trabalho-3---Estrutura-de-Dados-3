@@ -45,7 +45,7 @@ void buscaEmProfundidade(Grafo *gr);
 void visitaDFS(int pos, Grafo *gr, int* tempo, int* d, int* t, Cor* cor, short* antecessor, int* numciclos);
 void ordenarGrafo(Grafo *gr);
 void imprimeGrafo(Grafo *gr);
-int minDistance(Grafo *gr, int dist[], bool VerticesArvMin[]);
+int minDist(Grafo *gr, int dist[], bool VerticesArvMin[]);
 int dijkstra(Grafo *gr, int pos_origem, int pos_destino);
 
 #endif

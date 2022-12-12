@@ -248,8 +248,8 @@ void buscaEmProfundidade(Grafo *gr) {
 }
  
 
-// Encontra o vertice com a menor distancia dos vertices ainda nao inclusos na arvore d emenor caminho
-int minDistance(Grafo *gr, int dist[], bool VerticesArvMin[]) {
+// Encontra o vertice com a menor distancia dos vertices ainda nao inclusos na arvore de menor caminho
+int minDist(Grafo *gr, int dist[], bool VerticesArvMin[]) {
     // Inicializa menor valor
     int min = INT_MAX, min_pos;
  
@@ -282,11 +282,11 @@ int dijkstra(Grafo *gr, int id_origem, int id_destino) {
  
     // Distancia da pos_origem ate ela mesma e zero
     dist[pos_origem] = 0;
- 
+    
     // Encontra menor caminho para todos os vertices
     for (int count = 0; count < gr->totalVertices - 1; count++) {
         // Pega a menor distancia entre os vertices ainda nao processados
-        int u = minDistance(gr, dist, VerticesArvMin);
+        int u = minDist(gr, dist, VerticesArvMin);
  
         // Marca o vertice como processado
         VerticesArvMin[u] = true;
@@ -302,3 +302,4 @@ int dijkstra(Grafo *gr, int id_origem, int id_destino) {
     }
     return dist[pos_destino];
 }
+
