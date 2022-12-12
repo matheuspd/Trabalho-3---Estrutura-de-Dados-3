@@ -170,17 +170,20 @@ int existeVertice(Grafo *gr, int id) {  // Verifica se existe um vertice com o v
     }
     return -1;
 }
-/*
-int existeAresta(Vertice v1, Vertice v2, Grafo *gr) {   // Verifica se existe uma aresta entre os 2 vertices
-    int pos1 = existeVertice(gr, v1.id);
-    for(int i = 0; i < v1.numLigacoes; i++) {
-        if(v1.ligacoes[i].idPoPsConectado == v2.id) {
-            return 1;
+
+int existeAresta(int id1, int id2, Grafo *gr) {   // Verifica se existe uma aresta entre os 2 vertices
+    int pos1 = existeVertice(gr, id1);
+    if(pos1 != -1) {
+        Vertice v1 = gr->vertices[pos1];
+        for(int i = 0; i < v1.numLigacoes; i++) {
+            if(v1.ligacoes[i].idPoPsConectado == id2) {
+                return 1;
+            }
         }
     }
     return 0;
 }
-*/
+
 void ordenarGrafo(Grafo *gr) {  // Ordena o grafo pelos valores de idConecta(vertices) e idPoPs(listas de cada vertice)
     heap_sort_vertice(gr->vertices, gr->totalVertices);
     for(int i = 0; i < gr->totalVertices; i++) {
@@ -195,4 +198,54 @@ void imprimeGrafo(Grafo *gr) {  // Imprime o grafo em ordem
             printf("%d %dMbps\n", gr->vertices[i].ligacoes[j].idPoPsConectado, gr->vertices[i].ligacoes[j].velocidade);
         }
     }
+}
+
+void visitaDFS(int pos, Grafo *gr, int* tempo, int* d, int* t, Cor* cor, short* antecessor, int *numCiclos) {
+    //int velocidade;
+    int aux;
+    int pos_v;
+    cor[pos] = cinza;
+    (*tempo)++;
+    d[pos] = (*tempo);
+    //printf("Visita id %2d Tempo descoberta:%2d cinza\n", gr->vertices[pos].id, d[pos]);
+    if (gr->vertices[pos].numLigacoes > 0) {
+        aux = gr->vertices[pos].ligacoes[0].idPoPsConectado;
+        //velocidade = gr->vertices[pos].ligacoes[0].velocidade;
+        int pos_lista = 0;
+        while (pos_lista < gr->vertices[pos].numLigacoes) { 
+            pos_v = existeVertice(gr, aux);         
+            if (cor[pos_v] == branco) {
+                antecessor[pos_v] = pos;
+                visitaDFS(pos_v, gr, tempo, d, t, cor, antecessor, numCiclos);
+            }
+            if(cor[pos_v] == cinza && pos_v != antecessor[pos]){
+                (*numCiclos)++;             
+            }
+
+            pos_lista++;
+            aux = gr->vertices[pos].ligacoes[pos_lista].idPoPsConectado;
+            //velocidade = gr->vertices[pos].ligacoes[pos_lista].velocidade;
+        }
+    }
+    cor[pos] = preto;
+    (*tempo)++;
+    t[pos] = (*tempo);
+    //printf("Visita id %2d Tempo termino:%2d preto\n", gr->vertices[pos].id, t[pos]);
+}
+
+void buscaEmProfundidade(Grafo *gr) {
+    int pos;
+    int tempo = 0;
+    int numCiclos = 0;
+    int d[gr->totalVertices], t[gr->totalVertices];
+    Cor cor[gr->totalVertices];
+    short antecessor[gr->totalVertices];
+    for (pos = 0; pos < gr->totalVertices; pos++) {
+        cor[pos] = branco;
+        antecessor[pos] = -1;
+    }
+    for (pos = 0; pos < gr->totalVertices; pos++) {
+        if (cor[pos] == branco) visitaDFS(pos, gr, &tempo, d, t, cor, antecessor, &numCiclos);
+    }
+    printf("Quantidade de ciclos: %d\n", numCiclos);
 }
