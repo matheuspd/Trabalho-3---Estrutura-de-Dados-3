@@ -6,7 +6,7 @@ Grafo *criaGrafo() {    // Cria grafo vazio
     if(gr != NULL) {
         gr->totalArestas = 0;
         gr->totalVertices = 0;
-        gr->sizeGrafo = NUM_VERTICES_INICIAL;
+        gr->sizeGrafo = NUM_VERTICES_MAX;
         gr->vertices = malloc(sizeof(Vertice)*gr->sizeGrafo);
         if(gr->vertices == NULL) {
             free(gr);
@@ -43,8 +43,8 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
             strcpy(v[fimVetor].nomePais, reg->nomePais);
             strcpy(v[fimVetor].nomePoPs, reg->nomePoPs);
             strcpy(v[fimVetor].siglaPais, reg->siglaPais);
-            v[fimVetor].sizeLigacoes = NUM_LIGACOES_INICIAL;
-            v[fimVetor].ligacoes = malloc(sizeof(Aresta)*NUM_LIGACOES_INICIAL);
+            v[fimVetor].sizeLigacoes = NUM_LIGACOES_MAX;
+            v[fimVetor].ligacoes = malloc(sizeof(Aresta)*NUM_LIGACOES_MAX);
             if(v[fimVetor].ligacoes == NULL) {
                 return 0;
             }
@@ -62,11 +62,7 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
             // Nao aumenta o numero de ligacoes, o proximo sera inserido por cima do valor -1
 
             fimVetor++;
-            // REALOC
-            if(fimVetor >= gr->sizeGrafo) {
-                gr->sizeGrafo *= 2;
-                v = realloc(v, gr->sizeGrafo);
-            }
+            
         } else {
             if(!strcmp(v[pos].nomePais, "")) {
                 strcpy(v[pos].nomePais, reg->nomePais);
@@ -82,8 +78,8 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
             strcpy(v[fimVetor].nomePais, reg->nomePais);
             strcpy(v[fimVetor].nomePoPs, reg->nomePoPs);
             strcpy(v[fimVetor].siglaPais, reg->siglaPais);
-            v[fimVetor].sizeLigacoes = NUM_LIGACOES_INICIAL;
-            v[fimVetor].ligacoes = malloc(sizeof(Aresta)*NUM_LIGACOES_INICIAL);
+            v[fimVetor].sizeLigacoes = NUM_LIGACOES_MAX;
+            v[fimVetor].ligacoes = malloc(sizeof(Aresta)*NUM_LIGACOES_MAX);
             if(v[fimVetor].ligacoes == NULL) {
                 return 0;
             }
@@ -101,11 +97,7 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
             v[fimVetor].numLigacoes++;
 
             fimVetor++;
-            // REALOC
-            if(fimVetor >= gr->sizeGrafo) {
-                gr->sizeGrafo *= 2;
-                v = realloc(v, gr->sizeGrafo);
-            }
+            
         } else {
             if(!strcmp(v[pos].nomePais, "")) {
                 strcpy(v[pos].nomePais, reg->nomePais);
@@ -121,11 +113,7 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
             }
 
             v[pos].numLigacoes++;
-            // REALOC
-            if(v[pos].numLigacoes >= v[pos].sizeLigacoes) {
-                v[pos].sizeLigacoes *= 2;
-                v[pos].ligacoes = realloc(v[pos].ligacoes, v[pos].sizeLigacoes);
-            }
+            
         }
 
         // Insere o vertice do idPoPsConectado
@@ -135,8 +123,8 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
             strcpy(v[fimVetor].nomePais, "");
             strcpy(v[fimVetor].nomePoPs, "");
             strcpy(v[fimVetor].siglaPais, "");
-            v[fimVetor].sizeLigacoes = NUM_LIGACOES_INICIAL;
-            v[fimVetor].ligacoes = malloc(sizeof(Aresta)*NUM_LIGACOES_INICIAL);
+            v[fimVetor].sizeLigacoes = NUM_LIGACOES_MAX;
+            v[fimVetor].ligacoes = malloc(sizeof(Aresta)*NUM_LIGACOES_MAX);
             if(v[fimVetor].ligacoes == NULL) {
                 return 0;
             }
@@ -154,11 +142,7 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
             v[fimVetor].numLigacoes++;
 
             fimVetor++;
-            // REALOC
-            if(fimVetor >= gr->sizeGrafo) {
-                gr->sizeGrafo *= 2;
-                v = realloc(v, gr->sizeGrafo);
-            }
+            
         } else {
             v[pos].ligacoes[v[pos].numLigacoes].idPoPsConectado = reg->idConecta;
 
@@ -169,11 +153,7 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
             }
 
             v[pos].numLigacoes++;
-            // REALOC
-            if(v[pos].numLigacoes >= v[pos].sizeLigacoes) {
-                v[pos].sizeLigacoes *= 2;
-                v[pos].ligacoes = realloc(v[pos].ligacoes, v[pos].sizeLigacoes);
-            }
+            
         }
 
         gr->totalArestas++;
@@ -190,7 +170,7 @@ int existeVertice(Grafo *gr, int id) {  // Verifica se existe um vertice com o v
     }
     return -1;
 }
-
+/*
 int existeAresta(Vertice v1, Vertice v2, Grafo *gr) {   // Verifica se existe uma aresta entre os 2 vertices
     int pos1 = existeVertice(gr, v1.id);
     for(int i = 0; i < v1.numLigacoes; i++) {
@@ -200,7 +180,7 @@ int existeAresta(Vertice v1, Vertice v2, Grafo *gr) {   // Verifica se existe um
     }
     return 0;
 }
-
+*/
 void ordenarGrafo(Grafo *gr) {  // Ordena o grafo pelos valores de idConecta(vertices) e idPoPs(listas de cada vertice)
     heap_sort_vertice(gr->vertices, gr->totalVertices);
     for(int i = 0; i < gr->totalVertices; i++) {
