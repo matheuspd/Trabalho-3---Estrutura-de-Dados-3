@@ -25,7 +25,7 @@ char *remove_aspas(char *nomeCampo)
 	return nomeCampo;
 }
 
-void funcionalidade11() { // Cria grafo e imprime os registros
+void funcionalidade11() { // Cria grafo e imprime os vertices
 	char arqBin[TAM_MAX_NOME];
 	scanf("%s", arqBin);
 
@@ -79,14 +79,14 @@ void funcionalidade11() { // Cria grafo e imprime os registros
 	
 }
 
-void funcionalidade12() { // 
+void funcionalidade12() { // Verifica a quantidade de ciclos presentes no grafo
 	
 }
 
-void funcionalidade13() { // 
+void funcionalidade13() { // Verifica a maior taxa de transmissao possivel entre 2 vertices
 	
 }
 
-void funcionalidade14() { //
+void funcionalidade14() { // Verifica o comprimento do caminho entre 2 vertices, passando por outro vetice especifico
 	
 }

@@ -33,6 +33,7 @@ void liberaGrafo(Grafo *gr);
 int insereGrafo(Grafo *gr, REGISTRO *reg);
 int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg);
 int existeVertice(Grafo *gr, int id);
+int existeAresta(Vertice v1, Vertice v2, Grafo *gr);
 void ordenarGrafo(Grafo *gr);
 void imprimeGrafo(Grafo *gr);
 

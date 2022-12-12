@@ -16,7 +16,7 @@ Grafo *criaGrafo() {    // Cria grafo vazio
     return gr;
 }
 
-void liberaGrafo(Grafo *gr) {
+void liberaGrafo(Grafo *gr) {   // Destroi o grafo
     if(gr != NULL) {
         for(int i = 0; i < gr->totalVertices; i++) {
             free(gr->vertices[i].ligacoes);
@@ -26,16 +26,15 @@ void liberaGrafo(Grafo *gr) {
     }
 }
 
-int insereGrafo(Grafo *gr, REGISTRO *reg) {
+int insereGrafo(Grafo *gr, REGISTRO *reg) { // Insere um registro no grafo
     if(gr != NULL) {
         gr->totalVertices = inserirVertices(gr, gr->vertices, gr->totalVertices, reg);
-        gr->totalArestas++;
         return 1;
     }
     return 0;
 }
 
-int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { /*IMPLEMENTAR REALOC*/
+int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Insere no grafo um vertice e outro que esta conectado a ele (caso não exista ainda)  
 
     if(reg->idPoPsConectado == -1) {    // Se esta lendo apenas um vertice sem estar conectado a outro
         int pos = existeVertice(gr, reg->idConecta);
@@ -176,11 +175,13 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { /*IMPL
                 v[pos].ligacoes = realloc(v[pos].ligacoes, v[pos].sizeLigacoes);
             }
         }
+
+        gr->totalArestas++;
     }
     return fimVetor;
 }
 
-int existeVertice(Grafo *gr, int id) {
+int existeVertice(Grafo *gr, int id) {  // Verifica se existe um vertice com o valor do idConecta dado
     // Retorna posicao do vertice se encontrado e -1 caso contrario
     for(int i = 0; i < gr->totalVertices; i++) {
         if(gr->vertices[i].id == id) {
@@ -190,14 +191,24 @@ int existeVertice(Grafo *gr, int id) {
     return -1;
 }
 
-void ordenarGrafo(Grafo *gr) {
+int existeAresta(Vertice v1, Vertice v2, Grafo *gr) {   // Verifica se existe uma aresta entre os 2 vertices
+    int pos1 = existeVertice(gr, v1.id);
+    for(int i = 0; i < v1.numLigacoes; i++) {
+        if(v1.ligacoes[i].idPoPsConectado == v2.id) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void ordenarGrafo(Grafo *gr) {  // Ordena o grafo pelos valores de idConecta(vertices) e idPoPs(listas de cada vertice)
     heap_sort_vertice(gr->vertices, gr->totalVertices);
     for(int i = 0; i < gr->totalVertices; i++) {
         heap_sort_arestas(gr->vertices[i].ligacoes, gr->vertices[i].numLigacoes);
     }
 }
 
-void imprimeGrafo(Grafo *gr) {
+void imprimeGrafo(Grafo *gr) {  // Imprime o grafo em ordem
     for(int i = 0; i < gr->totalVertices; i++) {
         for(int j = 0; j < gr->vertices[i].numLigacoes; j++) {
             printf("%d %s %s %s ", gr->vertices[i].id, gr->vertices[i].nomePoPs, gr->vertices[i].nomePais, gr->vertices[i].siglaPais);
