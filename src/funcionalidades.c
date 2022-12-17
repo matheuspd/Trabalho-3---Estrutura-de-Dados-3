@@ -178,15 +178,27 @@ void funcionalidade13() { // Verifica a maior taxa de transmissao possivel entre
 
 	ordenarGrafo(gr);
 
-	int  PoPsOrigem, PoPsDestino;
+	int PoPsOrigem, PoPsDestino;
 
+	// Grafo especial pra armazenar o resíduo de velocidade nas arestas, não a velocidade em si
+	Grafo *residuo = criaGrafo();
+	
 	for(int i = 0; i < n; i++) {
-		scanf("%d %d", &PoPsOrigem, &PoPsDestino);
-		//int minTransm = menorTransmissao(gr, PoPsOrigem, PoPsDestino);
+		*(residuo) = *(gr);
 
-		//printf("Fluxo máximo entre %d e %d: -1\n", PoPsOrigem, PoPsDestino);
-		
-		//printf("Fluxo máximo entre %d e %d: %d Mbps\n", PoPsOrigem, PoPsDestino, minTransm);
+		scanf("%d %d", &PoPsOrigem, &PoPsDestino);
+
+		int visitados[gr->totalVertices]; // Criar uma lista de "vértices visitados" para armazenar caminhos sem ciclos durante a recursão
+		int n_visitados = 0; // Índice do fim atual da lista de vértices visitados
+
+		int fluxo_maximo = fluxoBFS(residuo, PoPsOrigem, PoPsDestino, visitados, n_visitados);
+
+		if (!fluxo_maximo) { // Em caso de fluxo nulo entre os dois vértices
+			printf("Fluxo máximo entre %d e %d: -1\n", PoPsOrigem, PoPsDestino);
+
+		} else {
+			printf("Fluxo máximo entre %d e %d: %dMbps\n", PoPsOrigem, PoPsDestino, fluxo_maximo);
+		}
 			
 	}
 	liberaGrafo(gr);
