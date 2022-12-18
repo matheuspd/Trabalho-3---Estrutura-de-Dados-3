@@ -53,7 +53,7 @@ void funcionalidade11() { // Cria grafo e imprime os vertices
 				{
 					if (reg->removido == '0')
 					{
-						insereGrafo(gr, reg);	// Imprime os registros nao removidos do arquivo binario
+						insereGrafo(gr, reg);	// Insere os registros nao removidos do arquivo binario no grafo
 					}
 				}
 			}
@@ -107,7 +107,7 @@ void funcionalidade12() { // Verifica a quantidade de ciclos presentes no grafo
 				{
 					if (reg->removido == '0')
 					{
-						insereGrafo(gr, reg);	// Imprime os registros nao removidos do arquivo binario
+						insereGrafo(gr, reg);	// Insere os registros nao removidos do arquivo binario no grafo
 					}
 				}
 			}
@@ -161,7 +161,7 @@ void funcionalidade13() { // Verifica a maior taxa de transmissao possivel entre
 				{
 					if (reg->removido == '0')
 					{
-						insereGrafo(gr, reg);	// Imprime os registros nao removidos do arquivo binario
+						insereGrafo(gr, reg);	// Insere os registros nao removidos do arquivo binario no grafo
 					}
 				}
 			}
@@ -192,7 +192,7 @@ void funcionalidade13() { // Verifica a maior taxa de transmissao possivel entre
 			printf("Fluxo máximo entre %d e %d: -1\n", PoPsOrigem, PoPsDestino);
 
 		} else {
-			printf("Fluxo máximo entre %d e %d: %dMbps\n", PoPsOrigem, PoPsDestino, fluxo_maximo);
+			printf("Fluxo máximo entre %d e %d: %d Mbps\n", PoPsOrigem, PoPsDestino, fluxo_maximo);
 		}
 			
 	}
@@ -233,7 +233,7 @@ void funcionalidade14() { // Verifica o comprimento do caminho entre 2 vertices,
 				{
 					if (reg->removido == '0')
 					{
-						insereGrafo(gr, reg);	// Imprime os registros nao removidos do arquivo binario
+						insereGrafo(gr, reg);	// Insere os registros nao removidos do arquivo binario no grafo
 					}
 				}
 			}
