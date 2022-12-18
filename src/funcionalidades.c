@@ -202,7 +202,7 @@ void funcionalidade13() { // Verifica a maior taxa de transmissao possivel entre
 	fclose(bin);
 }
 
-void funcionalidade14() { // Verifica o comprimento do caminho entre 2 vertices, passando por outro vetice especifico
+void funcionalidade14() { // Verifica o comprimento do caminho entre 2 vertices, passando por outro vertice especifico
 	char arqBin[TAM_MAX_NOME];
 	int n;
 	scanf("%s %d", arqBin, &n);
