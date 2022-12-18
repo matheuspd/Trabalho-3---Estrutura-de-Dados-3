@@ -123,7 +123,7 @@ void funcionalidade12() { // Verifica a quantidade de ciclos presentes no grafo
 	}
 
 	ordenarGrafo(gr);
-	buscaEmProfundidade(gr);
+	buscaEmProfundidade(gr);	// Imprime o numero de ciclos no grafo
 	liberaGrafo(gr);
 	free(reg);
 	free(cab);
@@ -252,14 +252,14 @@ void funcionalidade14() { // Verifica o comprimento do caminho entre 2 vertices,
 
 	int  PoPsOrigem, PoPsDestino, PoPsParada;
 
-	for(int i = 0; i < n; i++) {
+	for(int i = 0; i < n; i++) {	// Usa o algoritmo de dijkstra para encontrar o menor caminho entre os 2 pontos passando por outro
 		scanf("%d %d %d", &PoPsOrigem, &PoPsDestino, &PoPsParada);
 		int dist1 = dijkstra(gr, PoPsOrigem, PoPsParada);
 		int dist2 = dijkstra(gr, PoPsParada, PoPsDestino);
 
-		if(dist1 == INT_MAX || dist2 == INT_MAX) {
+		if(dist1 == INT_MAX || dist2 == INT_MAX) {	// Não existe um caminho interligando os 3 pontos
 			printf("Comprimento do caminho entre %d e %d parando em %d: -1\n", PoPsOrigem, PoPsDestino, PoPsParada);
-		} else if (dist1 == -1 || dist2 == -1){
+		} else if (dist1 == -1 || dist2 == -1){	// Algum ponto não existe
 			msg_falha_processamento();
 			liberaGrafo(gr);
 			free(reg);

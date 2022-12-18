@@ -38,7 +38,7 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
 
     if(reg->idPoPsConectado == -1) {    // Se esta lendo apenas um vertice sem estar conectado a outro
         int pos = existeVertice(gr, reg->idConecta);
-        if(pos == -1) {
+        if(pos == -1) { // Vertice ainda não existe
             v[fimVetor].id = reg->idConecta;
             strcpy(v[fimVetor].nomePais, reg->nomePais);
             strcpy(v[fimVetor].nomePoPs, reg->nomePoPs);
@@ -64,17 +64,17 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
 
             fimVetor++;
             
-        } else {
+        } else {    // Vertice já existe -> copia as informações
             if(!strcmp(v[pos].nomePais, "")) {
                 strcpy(v[pos].nomePais, reg->nomePais);
                 strcpy(v[pos].nomePoPs, reg->nomePoPs);
                 strcpy(v[pos].siglaPais, reg->siglaPais);
             }
         }
-    } else {
+    } else {    // Lendo umv ertice conectado a outro
         // Insere o vertice do idConecta
         int pos = existeVertice(gr, reg->idConecta);
-        if(pos == -1) {
+        if(pos == -1) { // Vertice não existe ainda
             v[fimVetor].id = reg->idConecta;
             strcpy(v[fimVetor].nomePais, reg->nomePais);
             strcpy(v[fimVetor].nomePoPs, reg->nomePoPs);
@@ -100,7 +100,7 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
 
             fimVetor++;
             
-        } else {
+        } else {    // Vertice já existe
             if(!strcmp(v[pos].nomePais, "")) {
                 strcpy(v[pos].nomePais, reg->nomePais);
                 strcpy(v[pos].nomePoPs, reg->nomePoPs);
@@ -122,7 +122,7 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
 
         // Insere o vertice do idPoPsConectado
         pos = existeVertice(gr, reg->idPoPsConectado);
-        if(pos == -1) {
+        if(pos == -1) { // Vertice não existe ainda
             v[fimVetor].id = reg->idPoPsConectado;
             strcpy(v[fimVetor].nomePais, "");
             strcpy(v[fimVetor].nomePoPs, "");
@@ -148,7 +148,7 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
 
             fimVetor++;
             
-        } else {
+        } else {    // Vertice já existe
 			v[pos].ligacoes[v[pos].numLigacoes].idPoPsOrigem = v[pos].id;
             v[pos].ligacoes[v[pos].numLigacoes].idPoPsConectado = reg->idConecta;
 
