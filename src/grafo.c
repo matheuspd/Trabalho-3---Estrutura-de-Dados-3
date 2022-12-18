@@ -51,6 +51,7 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
 
             v[fimVetor].numLigacoes = 0;
 
+			v[fimVetor].ligacoes[0].idPoPsOrigem = v[fimVetor].id;
             v[fimVetor].ligacoes[0].idPoPsConectado = reg->idPoPsConectado;
 
             if(reg->unidadeMedida == 'G') {
@@ -86,6 +87,7 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
 
             v[fimVetor].numLigacoes = 0;
 
+			v[fimVetor].ligacoes[0].idPoPsOrigem = v[fimVetor].id;
             v[fimVetor].ligacoes[0].idPoPsConectado = reg->idPoPsConectado;
 
             if(reg->unidadeMedida == 'G') {
@@ -104,6 +106,8 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
                 strcpy(v[pos].nomePoPs, reg->nomePoPs);
                 strcpy(v[pos].siglaPais, reg->siglaPais);
             }
+
+			v[pos].ligacoes[v[pos].numLigacoes].idPoPsOrigem= v[pos].id;
             v[pos].ligacoes[v[pos].numLigacoes].idPoPsConectado = reg->idPoPsConectado;
 
             if(reg->unidadeMedida == 'G') {
@@ -131,6 +135,7 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
 
             v[fimVetor].numLigacoes = 0;
 
+			v[fimVetor].ligacoes[0].idPoPsOrigem = v[fimVetor].id;
             v[fimVetor].ligacoes[0].idPoPsConectado = reg->idConecta;
 
             if(reg->unidadeMedida == 'G') {
@@ -144,6 +149,7 @@ int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg) { // Ins
             fimVetor++;
             
         } else {
+			v[pos].ligacoes[v[pos].numLigacoes].idPoPsOrigem = v[pos].id;
             v[pos].ligacoes[v[pos].numLigacoes].idPoPsConectado = reg->idConecta;
 
             if(reg->unidadeMedida == 'G') {
@@ -184,124 +190,124 @@ int velocidadeAresta(int id1, int id2, Grafo *gr) {   // Verifica se existe uma 
     return -1;
 }
 
-int fluxoBFS(Grafo* residuo, int PoPsAtual, int PoPsDestino, int* visitados, int n_visitados) {
-	int fluxo_atual = 0;
-	int pos_atual = existeVertice(residuo, PoPsAtual);
+int fluxoMaximo(Grafo* gr, int PoPsOrigem, int PoPsDestino) { // Implementação do algorítmo de Edmonds-Karp pra fluxo máximo
+	// Matriz de "arestas", armazena apenas o fluxo
+	int fluxo[gr->totalVertices][gr->totalVertices];
+	for (int i = 0; i < gr->totalVertices; i++) {
+		for (int j = 0; j < gr->totalVertices; j++) {
+			fluxo[i][j] = 0;
+		}
+	}
 
-	if (pos_atual == -1) {
+	int fluxo_total = 0;
+
+	// Encontrar a posição do vértice de origem
+	int pos_v_atual = existeVertice(gr, PoPsOrigem);
+	if (pos_v_atual == -1) {
 		return -1;
 	}
 
-	Vertice v_atual = residuo->vertices[pos_atual];
+	Vertice v1 = gr->vertices[pos_v_atual];
 
-	for (int i = 0; i < v_atual.numLigacoes; i++) {
-
-		int ja_visitado = 0; // Especificamente pular vértices já visitados pra evitar ciclos no caminho
-
-		for (int j = 0; j < n_visitados; j++) {
-			if (v_atual.ligacoes[i].idPoPsConectado == visitados[j]) {
-				ja_visitado = 1;
-				break;
-			}
-		}
-
-		if (ja_visitado) {
-			continue;
-		}
-
-		if (v_atual.ligacoes[i].velocidade == 0) { // Pular arestas sem resíduo remanescente
-			continue;
-		}
-
-		// Mover os ponteiros referentes ao ponto atual da recursão para o próximo vértice
-		PoPsAtual = v_atual.ligacoes[i].idPoPsConectado;
-		visitados[n_visitados] = PoPsAtual;
-		n_visitados++;
-
-		if (PoPsAtual != PoPsDestino) { // Se o caminho ainda está incompleto...
-			// Continuar procurando o fluxo deste caminho
-			int resultado = fluxoBFS(residuo, PoPsAtual, PoPsDestino, visitados, n_visitados);
-
-			if (resultado == -1) {
-				continue;
-			}
-
-			fluxo_atual += resultado;
-
-		} else { // Se este é o último vértice, calcular o fluxo máximo desse caminho e atualizar o grafo de resíduos
-
-			int resultado = residuoCaminho(residuo, visitados, n_visitados);
-
-			if (resultado == -1) {
-				continue;
-			}
-
-			fluxo_atual += resultado;
-		}
-
-	}
-
-	// Retornar o fluxo total deste galho da recursão
-	return fluxo_atual;
-}
-
-int residuoCaminho(Grafo *residuo, int* caminho, int n_caminho) { // Encontrar o fluxo máximo (resíduo mínimo) de um caminho definido de vértices
-	int min_residuo = -1;
-
-	// Obter o vértice correspondente ao primeiro ID
-	int pos_atual = existeVertice(residuo, caminho[0]);
-	if (pos_atual == -1) {
+	// Encontrar a posição do vértice de destino
+	int pos_v_destino = existeVertice(gr, PoPsDestino);
+	if (pos_v_destino == -1) {
 		return -1;
 	}
-	Vertice v_atual = residuo->vertices[pos_atual];
 
-	for (int i = 0; i < n_caminho - 1; i++) {
-		for (int j = 0; j < v_atual.numLigacoes; j++) {
-			if (v_atual.ligacoes[i].idPoPsConectado != caminho[i+1]) { // Procurar apenas pela ligação ao próximo vértice
-				continue;
-			}
-
-			if (v_atual.ligacoes[i].velocidade < min_residuo || min_residuo == -1) { // Checar resíduo mínimo
-				min_residuo = v_atual.ligacoes[i].velocidade;
-			}
-
-			// Mover para o próximo vértice da lista
-			pos_atual = existeVertice(residuo, caminho[i+1]);
-			if (pos_atual == -1) {
-				return -1;
-			}
-			v_atual = residuo->vertices[pos_atual];
-
+	while (true) {
+		// Array da aresta utilizada pra chegar num devido vértice, são encadeadas pra formar um caminho se você seguir os ponteiros de id
+		Aresta* caminho[gr->totalVertices];
+		for (int i = 0; i < gr->totalVertices; i++) {
+			caminho[i] = NULL;
 		}
-	}
 
-	// Recomeçar do primeiro vértice
-	pos_atual = existeVertice(residuo, caminho[0]);
-	if (pos_atual == -1) {
-		return -1;
-	}
-	v_atual = residuo->vertices[pos_atual];
+		// Implementação básica de uma fila com tamanho máximo, armazena os vértices a serem processados
+		Vertice filaVertices[gr->totalVertices];
+		// Inicializar com o vértice de origem
+		filaVertices[0] = v1;
+		int n_vertices_f = 1;
 
-	// Passar o fluxo máximo (= remover o resíduo mínimo) pelo caminho inteiro
-	for (int i = 0; i < n_caminho - 1; i++) {
-		for (int j = 0; j < v_atual.numLigacoes; j++) {
-			if (v_atual.ligacoes[i].idPoPsConectado != caminho[i+1]) { // Procurar apenas pela ligação ao próximo vértice
-				continue;
+		for (int v_ind_atual = 0; v_ind_atual < n_vertices_f; v_ind_atual++) {
+			Vertice v_atual = filaVertices[v_ind_atual];
+			pos_v_atual = existeVertice(gr, v_atual.id);
+
+			for (int i = 0; i < v_atual.numLigacoes; i++) { // Pra cada vértice ao qual este v está conectado:
+				int l_id = v_atual.ligacoes[i].idPoPsConectado;
+
+				// Ignorar se ele voltar pra origem
+				if (l_id == PoPsOrigem) {
+					continue;
+				}
+
+				// Ignorar se o vértice não existe
+				int pos_l = existeVertice(gr, l_id);
+				if (pos_l == -1) {
+					continue;
+				}
+
+				// Ignorar se já existe caminho para esse vértice
+				if (caminho[pos_l] != NULL) {
+					continue;
+				}
+
+				// Ignorar se a aresta pra esse vértice não tem mais capacidade residual
+				if (fluxo[pos_v_atual][pos_l] >= v_atual.ligacoes[i].velocidade) {
+					continue;
+				}
+
+				// Adicionar aresta ao array de caminhos
+				caminho[pos_l] = &(v_atual.ligacoes[i]);
+
+				// Adicionar vértice à fila
+				Vertice vL = gr->vertices[pos_l];
+				filaVertices[n_vertices_f] = vL;
+				n_vertices_f++;
 			}
-
-			v_atual.ligacoes[i].velocidade -= min_residuo; // Remover resíduo mínimo
-
-			// Mover para o próximo vértice da lista
-			pos_atual = existeVertice(residuo, caminho[i+1]);
-			if (pos_atual == -1) {
-				return -1;
-			}
-			v_atual = residuo->vertices[pos_atual];
-
 		}
+
+		if (caminho[pos_v_destino] == NULL) { // Se nenhum caminho livre pro v de destino foi encontrado
+			break;
+		}
+
+		int fluxo_max = -1;
+
+		Aresta* c_atual = caminho[pos_v_destino];
+
+		int pos_depois = pos_v_destino;
+		int pos_antes;
+
+		// Na perspectiva do grafo, estamos indo de trás pra frente; começando do destino e caminhando à origem
+		while (c_atual != NULL) { // Parar quando não tiver mais aresta chegando no vértice (ou seja, estamos no v origem)
+
+			pos_antes = existeVertice(gr, c_atual->idPoPsOrigem);
+
+			// Checar qual é o mínimo "fluxo max" que podemos passar pelo caminho todo
+			if (c_atual->velocidade - fluxo[pos_antes][pos_depois] < fluxo_max || fluxo_max == -1) {
+				fluxo_max = c_atual->velocidade - fluxo[pos_antes][pos_depois];
+			}
+
+			c_atual = caminho[pos_antes]; // Ir pra aresta anterior
+			pos_depois = pos_antes;
+		}
+
+		// Mais uma vez, começar do destino pra caminhar o caminho todo, adicionando o fluxo passado
+		c_atual = caminho[pos_v_destino];
+		pos_depois = pos_v_destino;
+
+		while (c_atual != NULL) {
+			pos_antes = existeVertice(gr, c_atual->idPoPsOrigem);
+
+			fluxo[pos_antes][pos_depois] += fluxo_max;
+
+			c_atual = caminho[pos_antes]; // Ir pra aresta anterior
+			pos_depois = pos_antes;
+		}
+
+		fluxo_total += fluxo_max;
 	}
 
-	return min_residuo; // ou max_fluxo;
+	return fluxo_total;
 }
 
 void ordenarGrafo(Grafo *gr) {  // Ordena o grafo pelos valores de idConecta(vertices) e idPoPs(listas de cada vertice)
@@ -350,7 +356,7 @@ void visitaDFS(int pos, Grafo *gr, int* tempo, int* d, int* t, Cor* cor, short* 
     //printf("Visita id %2d Tempo termino:%2d preto\n", gr->vertices[pos].id, t[pos]);
 }
 
-void buscaEmProfundidade(Grafo *gr) {
+void buscaEmProfundidade(Grafo *gr) { // Algoritmo padrão de busca em profundidade
     int pos;
     int tempo = 0;
     int numCiclos = 0;

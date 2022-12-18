@@ -9,6 +9,7 @@
 #define NUM_LIGACOES_MAX 100
 
 typedef struct aresta {
+	int idPoPsOrigem;
     int idPoPsConectado;
     int velocidade;
 } Aresta;
@@ -41,8 +42,7 @@ int insereGrafo(Grafo *gr, REGISTRO *reg);
 int inserirVertices(Grafo *gr, Vertice *v, int fimVetor, REGISTRO *reg);
 int existeVertice(Grafo *gr, int id);
 int velocidadeAresta(int id1, int id2, Grafo *gr);
-int fluxoBFS(Grafo* residuo, int id_atual, int id_d, int* visitados, int n_visitados);
-int residuoCaminho(Grafo *residuo, int* caminho, int n_caminho);
+int fluxoMaximo(Grafo* gr, int PoPsOrigem, int PoPsDestino);
 void buscaEmProfundidade(Grafo *gr);
 void visitaDFS(int pos, Grafo *gr, int* tempo, int* d, int* t, Cor* cor, short* antecessor, int* numciclos);
 void ordenarGrafo(Grafo *gr);
